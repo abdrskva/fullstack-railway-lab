@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>DevOps Lab - Salima</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4.9; padding: 40px; color: #333; }
+        .container { max-width: 500px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; font-size: 24px; }
+        .student-info { color: #7f8c8d; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        input { padding: 10px; width: 70%; border: 1px solid #ddd; border-radius: 5px; }
+        button { padding: 10px 15px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #2980b9; }
+        ul { list-style: none; padding: 0; margin-top: 20px; }
+        li { background: #fff; margin-bottom: 8px; padding: 10px; border-radius: 5px; border-left: 5px solid #3498db; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .del-btn { background: #e74c3c; padding: 5px 10px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DevOps Контрольная</h1>
+        <div class="student-info">
+            <strong>Студент:</strong> Салима Абдырасакова<br>
+            <strong>Группа:</strong> COMCEH-23
+        </div>
+        
+        <input type="text" id="taskInput" placeholder="Что нужно сделать?">
+        <button onclick="addTask()">Добавить</button>
+        
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        // Если запущено локально - идем на localhost, если на Railway - используем относительный путь
+        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5000'
+            : ''; 
+
+        async function loadTasks() {
+            try {
+                const res = await fetch(`${API_URL}/api/data`);
+                const data = await res.json();
+                const list = document.getElementById('taskList');
+                list.innerHTML = data.map(t => `
+                    <li>
+                        ${t.title} 
+                        <button class="del-btn" onclick="deleteTask(${t.id})">Удалить</button>
+                    </li>
+                `).join('');
+            } catch (err) { console.error("Ошибка загрузки:", err); }
+        }
+
+        async function addTask() {
+            const input = document.getElementById('taskInput');
+            if (!input.value) return;
+            await fetch(`${API_URL}/api
+cat <<EOF > index.html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>DevOps Lab - Salima</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4.9; padding: 40px; color: #333; }
+        .container { max-width: 500px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; font-size: 24px; }
+        .student-info { color: #7f8c8d; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        input { padding: 10px; width: 70%; border: 1px solid #ddd; border-radius: 5px; }
+        button { padding: 10px 15px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #2980b9; }
+        ul { list-style: none; padding: 0; margin-top: 20px; }
+        li { background: #fff; margin-bottom: 8px; padding: 10px; border-radius: 5px; border-left: 5px solid #3498db; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .del-btn { background: #e74c3c; padding: 5px 10px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DevOps Контрольная</h1>
+        <div class="student-info">
+            <strong>Студент:</strong> Салима Абдырасакова<br>
+            <strong>Группа:</strong> COMCEH-23
+        </div>
+        
+        <input type="text" id="taskInput" placeholder="Что нужно сделать?">
+        <button onclick="addTask()">Добавить</button>
+        
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        // Если запущено локально - идем на localhost, если на Railway - используем относительный путь
+        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5000'
+            : ''; 
+
+        async function loadTasks() {
+            try {
+                const res = await fetch(`${API_URL}/api/data`);
+                const data = await res.json();
+                const list = document.getElementById('taskList');
+                list.innerHTML = data.map(t => `
+                    <li>
+                        ${t.title} 
+                        <button class="del-btn" onclick="deleteTask(${t.id})">Удалить</button>
+                    </li>
+                `).join('');
+            } catch (err) { console.error("Ошибка загрузки:", err); }
+        }
+
+        async function addTask() {
+            const input = document.getElementById('taskInput');
+            if (!input.value) return;
+            await fetch(`${API_URL}/api/data`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({title: input.value})
+            });
+            input.value = '';
+            loadTasks();
+        }
+
+        async function deleteTask(id) {
+            await fetch(`${API_URL}/api/data/${id}`, { method: 'DELETE' });
+            loadTasks();
+        }
+
+        loadTasks();
+    </script>
+</body>
+</html>
