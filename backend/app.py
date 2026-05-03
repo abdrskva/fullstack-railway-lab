@@ -39,7 +39,7 @@ def delete_data(id):
 
 @app.route('/')
 def info():
-    return "Backend by Salima Abdyrasakova (COMCEH-23)"
+    return "Привет из Railway"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=os.getenv('PORT', 5000))
